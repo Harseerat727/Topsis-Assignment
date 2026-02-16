@@ -1,142 +1,24 @@
 # TOPSIS Assignment – Multi-Criteria Decision Making
 
 ## Overview
-This project implements **TOPSIS (Technique for Order Preference by Similarity to Ideal Solution)** for multi-criteria decision-making.  
-The assignment is divided into three parts:
+This project implements the TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) method for multi-criteria decision-making. The assignment is divided into three parts. Part I focuses on implementing a command-line Python program that can take input data, weights, and impacts, perform the TOPSIS calculations, and produce the results with scores and ranks. Part II involves packaging the TOPSIS functionality into a Python package that can be installed via PyPI. Part III implements a Flask-based web service that allows users to upload a data file, input weights and impacts, and receive the result via email.
 
-1. **Part I – Command Line Python Program**  
-2. **Part II – Python Package** (uploadable to PyPI)  
-3. **Part III – Web Service (Flask)** with email functionality  
+## Part I – Command Line Program
+The command-line program takes four parameters: the input data file, the weights for each criterion, the impacts (whether a criterion is beneficial or non-beneficial), and the name of the output result file. The program checks for proper input validation, including ensuring that the correct number of arguments are provided, that the input file exists, that numeric columns contain valid numbers, and that the number of weights and impacts matches the number of criteria columns. The program normalizes the data, applies the weights, determines ideal best and worst values for each criterion, calculates distances from the ideals, computes the TOPSIS score, and ranks the alternatives accordingly. The output file contains the scores and ranks for each alternative.
 
----
+## Part II – Python Package
+The TOPSIS functionality has been packaged into a Python package following standard packaging conventions. The package can be installed from PyPI using the command `pip install Topsis-Harseerat-102317191==1.0.0`. The package exposes a command-line interface similar to the standalone program and provides the same functionality. This allows users to perform TOPSIS calculations without needing to directly run the Python script. The package is structured with an `__init__.py` file and a module containing the core TOPSIS functions. Proper packaging allows for easy installation, version management, and reuse in other projects.
 
-## Folder Structure
+## Part III – Web Service (Flask)
+A web service has been developed using Flask that enables users to perform TOPSIS calculations through a web interface. Users can upload a CSV file containing alternatives and criteria, input the weights and impacts, and provide an email address. The application validates the inputs, performs the TOPSIS calculation, generates the result file, and sends it automatically to the user’s email. The service handles common input issues such as missing values, non-numeric data, and incorrect formatting of weights or impacts. This provides a user-friendly interface for TOPSIS without requiring users to use the command line or Python environment.
 
-Topsis-Assignment/
-├── CLI/ # Part I - Command Line program
-│ └── topsis.py
-├── Package/ # Part II - Python Package
-│ └── topsis_pkg/
-│ ├── init.py
-│ └── topsis_module.py
-│ └── setup.py
-├── FlaskWeb/ # Part III - Flask Web Service
-│ ├── app.py
-│ └── index.html
-├── sample_data.csv # Example CSV file
-├── requirements.txt # Dependencies
-├── README.md # Project instructions
-└── LICENSE
+## Input Validation and Error Handling
+Across all parts, input validation and error handling are emphasized. The application checks that the number of weights and impacts matches the number of criteria, that impacts are specified correctly as positive or negative, and that the input data contains only numeric values in the criteria columns. Exceptions such as file not found, invalid numeric values, and encoding issues are handled gracefully. For the web service, the email format is validated to ensure that the result can be delivered successfully.
+
+## Dependencies
+The project uses standard Python libraries including pandas and numpy for data manipulation, and Flask for the web service. For sending emails in Part III, the smtplib and email libraries are used. All dependencies can be installed via pip.
+
+## Conclusion
+This assignment demonstrates the implementation of the TOPSIS method in multiple formats: a command-line tool, a Python package, and a web service. It showcases the ability to handle real-world data validation issues, perform multi-criteria decision-making calculations, and deliver results in multiple user-friendly ways. The project also covers software engineering practices such as packaging, documentation, and web development integration.
 
 
----
-
-## Part I – Command Line Python Program
-
-### Usage
-```bash
-python CLI/topsis.py <InputFile> <Weights> <Impacts> <OutputFile>
-Example
-python CLI/topsis.py sample_data.csv 1,1,1,2 +,+,-,+ result.csv
-Input CSV must have 3 or more columns (first = alternative, rest = numeric criteria)
-
-Weights and impacts must match the number of numeric columns
-
-Impacts: + (benefit), - (cost)
-
-Output CSV contains Topsis Score and Rank
-
-Sample Input (sample_data.csv)
-Model,Price,Mileage,Comfort,Safety
-Car A,20000,13,3,5
-Car B,25000,12,4,4
-Car C,30000,18,5,1
-Car 4,35000,11,2,3
-Sample Output (result.csv)
-Model	Price	Mileage	Comfort	Safety	Topsis Score	Rank
-Car C	30000	18	5	1	0.679	1
-Car A	20000	13	3	5	0.623	2
-Car B	25000	12	4	4	0.396	3
-Car 4	35000	11	2	3	0.301	4
-Part II – Python Package
-Installation
-Install the package from PyPI:
-
-pip install Topsis-Harseerat-102317191==1.0.0
-Usage (Command Line via Package)
-topsis-cli sample_data.csv 1,1,1,2 +,+,-,+ result.csv
-Produces the same Topsis Score and Rank as the CLI script
-
-Package version used: 1.0.0
-
-Folder Details
-Package/
-└── topsis_pkg/
-    ├── __init__.py
-    └── topsis_module.py
-Part III – Web Service (Flask)
-Run the Web App
-python FlaskWeb/app.py
-Opens at: http://127.0.0.1:5000
-
-Use index.html form to:
-
-Upload CSV file
-
-Enter weights and impacts
-
-Enter email address
-
-The result CSV will be sent automatically to the email provided
-
-Example Email Result
-Model	Price	Mileage	Comfort	Safety	Topsis Score	Rank
-Car C	30000	18	5	1	0.679	1
-Car A	20000	13	3	5	0.623	2
-Car B	25000	12	4	4	0.396	3
-Car 4	35000	11	2	3	0.301	4
-Input Validation and Cleaning
-Automatically handles:
-
-Extra spaces in CSV
-
-Non-numeric values (filled with column mean)
-
-Missing values
-
-Encoding issues (utf-8, latin1)
-
-Checks:
-
-Number of weights = number of impacts = number of numeric columns
-
-Impacts are + or -
-
-Email format is valid for web service
-
-Dependencies
-All dependencies are listed in requirements.txt:
-
-pandas
-numpy
-flask
-Install them using:
-
-pip install -r requirements.txt
-Author
-Harseerat – Assignment Submission
-GitHub: https://github.com/Harseerat727/Topsis-Assignment
-
-
----
-
-This README includes:
-
-- **Folder structure**  
-- **CLI usage and results**  
-- **Python package usage** (with `pip install`)  
-- **Flask web service instructions**  
-- **Sample input/output tables**  
-- **Dependencies and validation**  
-
----
